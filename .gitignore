@@ -1,0 +1,14 @@
+# Live trading state — contains API keys and portfolio data
+brain.json
+config.json
+portfolio.json
+paper_portfolio.json
+activity.log
+.autonomous_investor/
+.investment_portfolio.json
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
