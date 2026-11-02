@@ -1,5 +1,7 @@
 # Investor Bot
 
+> **Project status:** Retired. This bot is no longer running, and this repository is kept as an archive of past work.
+
 A long-term, buy-and-hold trading bot for [Alpaca](https://alpaca.markets) brokerage accounts. It finds small and mid-cap growth stocks, requires each one to pass independent checks, and holds a small portfolio instead of trading frequently.
 
 Earlier versions rotated through leveraged and inverse ETFs using RSI signals. v5.0 replaces that approach with fundamentals-based selection.
