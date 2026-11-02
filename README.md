@@ -1,18 +1,18 @@
 # Investor Bot
 
-An autonomous trading bot that runs on a live Alpaca brokerage account. Uses RSI signals, market regime detection, and self-learning weights to trade leveraged ETFs, individual stocks, and crypto.
+A long-term, buy-and-hold trading bot for [Alpaca](https://alpaca.markets) brokerage accounts. It finds small and mid-cap growth stocks, requires each one to pass independent checks, and holds a small portfolio instead of trading frequently.
+
+Earlier versions rotated through leveraged and inverse ETFs using RSI signals. v5.0 replaces that approach with fundamentals-based selection.
 
 ## Features
 
-- **RSI strategy** — buys oversold assets, sells overbought ones
-- **Market regime detection** — switches between bull, bear, and neutral allocations automatically
-- **Self-learning** — adjusts signal weights and stop-loss thresholds based on recent performance
-- **Leveraged ETFs** — trades TQQQ, SOXL, UPRO, TECL, FNGU in bull regimes
-- **Inverse ETFs** — rotates into SQQQ, SPXS in bear regimes
-- **Trailing stops** — per-asset configurable stop-loss percentages
-- **Sector limits** — caps exposure per sector to limit concentration risk
-- **Paper trading comparison** — tracks a shadow paper portfolio alongside live trades
-- **Backtesting** — simulate any strategy over custom date ranges
+- **Stock discovery** — builds its candidate list from small and mid-cap growth screens
+- **Three-part screen** — a stock must pass fundamentals, price trend, and insider activity checks, and any one can veto it
+- **Concentrated portfolio** — up to 6 stocks at 10% each, with a small Bitcoin ETF (IBIT) position
+- **Risk controls** — per-asset trailing stops, sector limits, and correlation checks
+- **Exit checks** — periodically rechecks the fundamentals of held stocks
+- **Stop-loss calibration** — adjusts stop levels based on past stop-loss outcomes
+- **Reporting** — tracks performance against the S&P 500 and emails a weekly report
 - **Portfolio diversifier** — separate tool for planning long-term asset allocation
 
 ## Files
@@ -21,43 +21,32 @@ An autonomous trading bot that runs on a live Alpaca brokerage account. Uses RSI
 |---|---|
 | `autonomous_investor.py` | Main trading bot |
 | `investment_diversifier.py` | Portfolio diversification planning tool |
-| `investor.sh` | Interactive terminal menu for the bot |
 
 ## Setup
 
-1. Create an [Alpaca](https://alpaca.markets) account and generate API keys
-2. Clone the repo and install dependencies:
+Requires macOS and Python 3.10+. The bot has no third-party dependencies.
+
+1. Create an Alpaca account and generate API keys.
+2. Store your credentials in the macOS Keychain:
 
 ```bash
-git clone https://github.com/victormartin1313/investor-bot.git
-cd investor-bot
-pip install alpaca-trade-api yfinance requests
+security add-generic-password -s autonomous_investor -a alpaca_api_key -w
+security add-generic-password -s autonomous_investor -a alpaca_api_secret -w
+security add-generic-password -s autonomous_investor -a email_password -w
 ```
 
-3. Run setup to configure your API keys and preferences:
-
-```bash
-python3 autonomous_investor.py --setup
-```
-
-4. Use the interactive menu:
-
-```bash
-bash investor.sh
-```
+3. Add your non-secret settings to `~/.autonomous_investor/config.json`, such as `paper_trading`, `email_address`, `notification_email`, `smtp_server`, and `smtp_port`. Use `paper_trading: true` to test without real money.
 
 ## CLI Usage
 
 ```bash
-python3 autonomous_investor.py --status       # Portfolio overview
-python3 autonomous_investor.py --analysis     # Market regime analysis
-python3 autonomous_investor.py --daily        # Run a trading check
+python3 autonomous_investor.py --status       # Current holdings and performance
+python3 autonomous_investor.py --daily        # Rescan, rebalance, and check exits
+python3 autonomous_investor.py --weekly       # Email the weekly report
 python3 autonomous_investor.py --trades       # Recent trades and reasoning
 python3 autonomous_investor.py --benchmark    # Performance vs S&P 500
-python3 autonomous_investor.py --simulate 90  # Backtest over 90 days
-python3 autonomous_investor.py --paper        # Paper vs live comparison
 ```
 
 ## Disclaimer
 
-This is a personal project for educational purposes. Leveraged ETFs and algorithmic trading carry significant risk. Past performance does not guarantee future results.
+This is a personal project for educational purposes. Trading carries significant risk, and this code is not financial advice.
